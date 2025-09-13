@@ -1,21 +1,14 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import { RouterProvider } from 'react-router-dom'
-import { createBrowserRouter } from 'react-router'
+import { StrictMode } from "react";
+import { createRoot } from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import "./index.css";
 // import Login from './pages/auth/Login.tsx'
-import ChattingPage from './pages/Dashboard/ChattingPage.tsx'
-import { Toaster } from 'react-hot-toast'
-import LoginPage from './pages/auth/LoginPage.tsx'
+import { Toaster } from "react-hot-toast";
+import { router } from "./route/router";
 
-const router = createBrowserRouter([
- {path: "/login", element: <LoginPage />},
- {path: "/", element: <ChattingPage />},
-]);
-
-createRoot(document.getElementById('root')!).render(
+createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Toaster position="top-right" />
     <RouterProvider router={router} />
-  </StrictMode>,
-)
+  </StrictMode>
+);
