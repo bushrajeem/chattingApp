@@ -11,19 +11,37 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PlusSquare } from "lucide-react";
 import { FriendDropdown } from "./FriendDropdown";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "@/firebase";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+} from "@/components/ui/select";
 
 function ConvoDialog() {
   const [selectedfriend, setSelectedfriend] = useState("");
   const handleSubmit = (e) => {
     setSelectedfriend(e);
-    console.log(selectedfriend);
-    
-  }
+    console.log(e);
+  };
+  const [friends, setFriends] = useState([]);
 
+  useEffect(() => {
+    async function fetchUsers() {
+      const querySnapshot = await getDocs(collection(db, "GoogleAuth"));
+      const users = querySnapshot.docs.map((doc) => doc.data());
+      setFriends(users);
+    }
+    fetchUsers();
+  }, []);
   return (
     <Dialog>
-      <form>
+
         <DialogTrigger asChild>
           <Button variant="outline">
             <PlusSquare />
@@ -33,21 +51,42 @@ function ConvoDialog() {
           <DialogHeader>Create Conversation</DialogHeader>
 
           <div className="grid gap-4">
-            <div className="grid gap-3">
-              <Label htmlFor="name-1">Name</Label>
-              <Input id="name-1" name="name" placeholder="Search Name" />
-            </div>
-            <FriendDropdown selectedfriend={selectedfriend} setSelectedfriend={setSelectedfriend}/>
+            <Select value={selectedfriend} onValueChange={setSelectedfriend}>
+              <SelectTrigger asChild>
+                <Button variant="outline">
+                  {selectedfriend
+                    ? friends.find((f) => f.uid === selectedfriend)?.name
+                    : "Select a Friend"}
+                </Button>
+              </SelectTrigger>
+
+              <SelectContent className="w-56 bg-white shadow-2xl p-5 rounded-2xl">
+                <SelectGroup>
+                  <SelectLabel>Friends:</SelectLabel>
+                  {friends.map((friend) => (
+                    <SelectItem
+                      className=" cursor-pointer"
+                      key={friend.uid}
+                      value={friend.uid}
+                    >
+                      {friend.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
           </div>
 
           <DialogFooter>
             <DialogClose asChild>
               <Button variant="outline">Cancel</Button>
             </DialogClose>
-            <Button variant="outline" type="submit" onClick={handleSubmit}>Select</Button>
+            <Button variant="outline" type="submit" onClick={handleSubmit}>
+              Select
+            </Button>
           </DialogFooter>
         </DialogContent>
-      </form>
+
     </Dialog>
   );
 }
