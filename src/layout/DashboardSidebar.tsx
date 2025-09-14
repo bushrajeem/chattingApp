@@ -1,62 +1,29 @@
-import { data } from "@/components/app-sidebar";
 import { NavUser } from "@/components/nav-user";
 import {
-    Sidebar,
-    SidebarContent,
-    SidebarFooter,
-    SidebarGroup,
-    SidebarGroupContent,
-    SidebarHeader,
-    SidebarMenu,
-    SidebarMenuButton,
-    SidebarMenuItem,
-    useSidebar,
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
-import { ArchiveX, Command, File, Inbox, Send, Trash2 } from "lucide-react";
-import React from "react";
+import { SidebarMenuList } from "@/SidebarMenuList";
+import { Command } from "lucide-react";
 
-export const navMain = [
-  {
-    title: "Inbox",
-    url: "#",
-    icon: Inbox,
-    isActive: true,
-  },
-  {
-    title: "Drafts",
-    url: "#",
-    icon: File,
-    isActive: false,
-  },
-  {
-    title: "Sent",
-    url: "#",
-    icon: Send,
-    isActive: false,
-  },
-  {
-    title: "Junk",
-    url: "#",
-    icon: ArchiveX,
-    isActive: false,
-  },
-  {
-    title: "Trash",
-    url: "#",
-    icon: Trash2,
-    isActive: false,
-  },
-];
+import React from "react";
+import { Link } from "react-router-dom";
 
 function DashboardSidebar() {
-  const [activeItem, setActiveItem] = React.useState(navMain[0]);
+  const [activeItem, setActiveItem] = React.useState(
+    SidebarMenuList.navMain[0]
+  );
   const { setOpen } = useSidebar();
 
   return (
-    <Sidebar
-      collapsible="icon"
-      className="overflow-hidden *:data-[sidebar=sidebar]:flex-row"
-    >
       <Sidebar
         collapsible="none"
         className="w-[calc(var(--sidebar-width-icon)+1px)]! border-r"
@@ -82,29 +49,34 @@ function DashboardSidebar() {
           <SidebarGroup>
             <SidebarGroupContent className="px-1.5 md:px-0">
               <SidebarMenu>
-                {navMain.map((item) => (
-                  <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton
-                      onClick={() => {
-                        setActiveItem(item);
-                        setOpen(true);
-                      }}
-                      isActive={activeItem?.title === item.title}
-                    >
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
+                {SidebarMenuList.navMain.map((item) => (
+                  <Link to={item.url}>
+                    <SidebarMenuItem key={item.title}>
+                      <SidebarMenuButton
+                        onClick={() => {
+                          setActiveItem(item);
+                          setOpen(true);
+                        }}
+                        tooltip={{
+                          children: item.title,
+                          hidden: false,
+                        }}
+                        isActive={activeItem?.title === item.title}
+                      >
+                        <item.icon />
+                        <span>{item.title}</span>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  </Link>
                 ))}
               </SidebarMenu>
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
         <SidebarFooter>
-          <NavUser user={data.user} />
+          <NavUser user={SidebarMenuList.user} />
         </SidebarFooter>
       </Sidebar>
-    </Sidebar>
   );
 }
 
