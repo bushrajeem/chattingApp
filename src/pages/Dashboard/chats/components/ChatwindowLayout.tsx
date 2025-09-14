@@ -34,7 +34,7 @@ function ChatwindowLayout() {
         <span className="text-sm text-gray-500">Online</span>
       </header>
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50">
+      <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-white">
         {message.map((msg, i) => (
           <div key={i}>{msg.text}</div>
         ))}
@@ -43,7 +43,7 @@ function ChatwindowLayout() {
       <footer className="border-t p-3 flex gap-2 items-center">
         <Textarea
           placeholder="Type your message..."
-          className="resize-none h-12"
+          className="resize-none h-12 "
           value={newMessage}
           onChange={(e) => setNewMessage(e.target.value)}
         />
